@@ -108,6 +108,7 @@ function addXP(amount) {
   if (after > before) {
     showToast(`Nível ${after} alcançado!`, "⭐");
     sfxLevelUp();
+    showLevelUpOverlay(after);
     if (after >= 5) {
       const b = grantBadge(state, "level_5");
       if (b) showToast(b.label, b.icon);
@@ -256,6 +257,7 @@ const runner = {
   wrong: 0,
   hearts: 3,
   sessionXP: 0,
+  combo: 0,
   currentAnswered: false,
 };
 
@@ -269,6 +271,8 @@ function startMission(subject, mission) {
   runner.wrong = 0;
   runner.hearts = 3;
   runner.sessionXP = 0;
+  runner.combo = 0;
+  updateComboBadge(0);
 
   document.getElementById("runner-intro-icon").textContent = subject.icon;
   document.getElementById("runner-intro-title").textContent = mission.title;
@@ -298,6 +302,8 @@ function startReview() {
   runner.wrong = 0;
   runner.hearts = 3;
   runner.sessionXP = 0;
+  runner.combo = 0;
+  updateComboBadge(0);
 
   document.getElementById("runner-intro-icon").textContent = "🔁";
   document.getElementById("runner-intro-title").textContent = "Revisão Inteligente";
@@ -324,6 +330,8 @@ function startRecap(subject, fase) {
   runner.wrong = 0;
   runner.hearts = 3;
   runner.sessionXP = 0;
+  runner.combo = 0;
+  updateComboBadge(0);
 
   document.getElementById("runner-intro-icon").textContent = "📝";
   document.getElementById("runner-intro-title").textContent = "Recapitulação: " + fase.title;
@@ -428,6 +436,10 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
   runner.currentAnswered = true;
   answerExercise(state, ex.id, correct);
 
+  const sparkleOrigin = ex.type === "mc"
+    ? document.querySelector("#runner-options .opt-btn.is-correct")
+    : document.getElementById("btn-runner-check");
+
   const fb = document.getElementById("runner-feedback");
   fb.classList.remove("hidden", "ok", "bad");
   if (correct) {
@@ -436,10 +448,15 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
     fb.textContent = "✅ Isso aí! Resposta certa.";
     vibrate(35);
     sfxCorrect();
+    sparkleFromElement(sparkleOrigin);
+    runner.combo++;
+    updateComboBadge(runner.combo);
     addXP(15);
     runner.sessionXP += 15;
   } else {
     runner.wrong++;
+    runner.combo = 0;
+    updateComboBadge(0);
     runner.hearts = Math.max(0, runner.hearts - 1);
     document.getElementById("runner-hearts").textContent = "❤️".repeat(runner.hearts) || "💔";
     fb.classList.add("bad");
@@ -490,6 +507,7 @@ function finishRunner() {
         if (b) setTimeout(() => showToast(b.label, b.icon), 900);
       }
       setTimeout(() => showToast("Bônus de fase: +100 XP! 🎁", "🎉"), 500);
+      fireConfetti(60, 1800);
     }
   }
   registerStudyToday(state);
@@ -681,6 +699,7 @@ function finalizeExam() {
   if (correctCount === exam.queue.length) {
     const b = grantBadge(state, "prova_100");
     if (b) setTimeout(() => showToast(b.label, b.icon), 500);
+    fireConfetti(60, 1800);
   }
   saveState(state);
 
