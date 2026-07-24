@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#161832">
+<title>Trilha CME</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Trilha CME">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+
+<!-- ===================== ONBOARDING ===================== -->
+<section id="screen-onboarding" class="screen">
+  <div class="onboard-wrap">
+    <div class="onboard-badge">✨</div>
+    <h1 class="onboard-title">Bem-vindo à <span>Trilha CME</span></h1>
+    <p class="onboard-sub">Um jeito leve e gamificado de conhecer o mundo da Central de Material e Esterilização — no seu ritmo, ganhando XP a cada passo.</p>
+
+    <label class="field-label" for="input-name">Como podemos te chamar?</label>
+    <input id="input-name" class="text-input" type="text" maxlength="18" placeholder="Seu nome ou apelido">
+
+    <div class="field-label">Escolha seu avatar</div>
+    <div id="avatar-picker" class="avatar-picker"></div>
+
+    <button id="btn-start" class="btn btn-primary btn-lg">Começar aventura 🚀</button>
+  </div>
+</section>
+
+<!-- ===================== HOME ===================== -->
+<section id="screen-home" class="screen">
+  <header class="topbar">
+    <div class="player-chip">
+      <span id="home-avatar" class="player-avatar">🧑‍🚀</span>
+      <div>
+        <div id="home-name" class="player-name">Aventureiro</div>
+        <div id="home-level" class="player-level">Nível 1</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button id="btn-music" class="icon-btn" aria-label="Música" title="Música de fundo">🎵</button>
+      <button id="btn-sfx" class="icon-btn" aria-label="Efeitos sonoros" title="Efeitos sonoros">🔊</button>
+      <button id="btn-fullscreen" class="icon-btn" aria-label="Tela cheia" title="Tela cheia">⛶</button>
+      <div class="streak-chip">
+        <span class="streak-flame">🔥</span>
+        <span id="home-streak">0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="xp-bar-wrap">
+    <div class="xp-bar"><div id="xp-fill" class="xp-fill"></div></div>
+    <div id="xp-label" class="xp-label">0 / 100 XP</div>
+  </div>
+
+  <div class="section-title">Sua trilha de hoje</div>
+  <div id="subject-tabs" class="subject-tabs"></div>
+  <div id="trail" class="trail"></div>
+
+  <div class="quick-actions">
+    <button id="btn-review" class="quick-card">
+      <span class="quick-icon">🔁</span>
+      <span class="quick-label">Revisão</span>
+      <span id="review-count" class="quick-badge">0</span>
+    </button>
+    <button id="btn-exam" class="quick-card">
+      <span class="quick-icon">⏱️</span>
+      <span class="quick-label">Modo Prova</span>
+    </button>
+    <button id="btn-feynman" class="quick-card">
+      <span class="quick-icon">🧠</span>
+      <span class="quick-label">Ensine o Sistema</span>
+    </button>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn is-active" data-nav="home">🏠<span>Início</span></button>
+    <button class="nav-btn" data-nav="profile">🎒<span>Perfil</span></button>
+  </nav>
+</section>
+
+<!-- ===================== DAILY TRIVIA (curiosidades do dia) ===================== -->
+<section id="screen-trivia" class="screen">
+  <header class="runner-top">
+    <div class="trivia-header-icon">💡</div>
+    <div class="runner-progress"><div id="trivia-progress-fill" class="runner-progress-fill trivia-fill"></div></div>
+    <div style="width:38px"></div>
+  </header>
+
+  <div id="trivia-quiz" class="runner-quiz">
+    <div class="section-title" style="margin-top:4px">Curiosidades do dia</div>
+    <div id="trivia-category" class="trivia-category">Categoria</div>
+    <div id="trivia-text" class="trivia-text">Texto da curiosidade aparece aqui.</div>
+    <div class="trivia-question">Verdade ou mentira?</div>
+
+    <div id="trivia-buttons" class="trivia-buttons">
+      <button id="btn-trivia-true" class="btn btn-trivia btn-trivia-true">✅ Verdade</button>
+      <button id="btn-trivia-false" class="btn btn-trivia btn-trivia-false">❌ Mentira</button>
+    </div>
+
+    <div id="trivia-feedback" class="runner-feedback hidden"></div>
+    <button id="btn-trivia-next" class="btn btn-primary btn-lg hidden">Continuar</button>
+
+    <button id="btn-trivia-skip" class="btn btn-ghost">Pular por hoje</button>
+  </div>
+
+  <div id="trivia-summary" class="runner-summary hidden">
+    <div class="runner-summary-icon">💡</div>
+    <h2 class="runner-summary-title">Curiosidades concluídas!</h2>
+    <div id="trivia-summary-stats" class="runner-intro-text"></div>
+    <button id="btn-trivia-finish" class="btn btn-primary btn-lg">Ir para a trilha</button>
+  </div>
+</section>
+
+<!-- ===================== MISSION / REVIEW (shared runner) ===================== -->
+<section id="screen-runner" class="screen">
+  <header class="runner-top">
+    <button id="btn-exit-runner" class="icon-btn" aria-label="Sair">✕</button>
+    <div class="runner-progress"><div id="runner-progress-fill" class="runner-progress-fill"></div></div>
+    <div id="runner-hearts" class="runner-hearts">❤️❤️❤️</div>
+  </header>
+  <div id="runner-session-xp" class="session-xp">✨ 0 XP nesta sessão</div>
+
+  <div id="runner-intro" class="runner-intro">
+    <div id="runner-intro-icon" class="runner-intro-icon">📘</div>
+    <h2 id="runner-intro-title" class="runner-intro-title">Título da missão</h2>
+    <p id="runner-intro-text" class="runner-intro-text">Explicação da missão aparece aqui.</p>
+    <button id="btn-runner-begin" class="btn btn-primary btn-lg">Vamos lá!</button>
+  </div>
+
+  <div id="runner-quiz" class="runner-quiz hidden">
+    <div id="runner-context" class="runner-context"></div>
+    <div id="runner-question" class="runner-question"></div>
+    <div id="runner-options" class="runner-options"></div>
+    <input id="runner-text-input" class="text-input runner-text-input hidden" type="text" placeholder="Digite sua resposta...">
+    <div id="runner-feedback" class="runner-feedback hidden"></div>
+    <button id="btn-runner-check" class="btn btn-primary btn-lg">Verificar</button>
+    <button id="btn-runner-next" class="btn btn-primary btn-lg hidden">Continuar</button>
+  </div>
+
+  <div id="runner-summary" class="runner-summary hidden">
+    <div class="runner-summary-icon">🎉</div>
+    <h2 class="runner-summary-title">Missão concluída!</h2>
+    <div id="runner-summary-stats" class="runner-summary-stats"></div>
+    <button id="btn-runner-finish" class="btn btn-primary btn-lg">Voltar à trilha</button>
+  </div>
+</section>
+
+<!-- ===================== EXAM MODE ===================== -->
+<section id="screen-exam" class="screen">
+  <header class="runner-top">
+    <button id="btn-exit-exam" class="icon-btn" aria-label="Sair">✕</button>
+    <div class="runner-progress"><div id="exam-progress-fill" class="runner-progress-fill exam-fill"></div></div>
+    <div id="exam-timer" class="exam-timer">02:00</div>
+  </header>
+
+  <div id="exam-intro" class="runner-intro">
+    <div class="runner-intro-icon">⏱️</div>
+    <h2 class="runner-intro-title">Modo Prova</h2>
+    <p class="runner-intro-text">10 questões, tempo limitado, sem dicas. Assim como numa prova de verdade — mas aqui, errar só te ajuda a aprender onde focar depois.</p>
+    <button id="btn-exam-begin" class="btn btn-primary btn-lg">Começar prova</button>
+  </div>
+
+  <div id="exam-quiz" class="runner-quiz hidden">
+    <div id="exam-context" class="runner-context"></div>
+    <div id="exam-question" class="runner-question"></div>
+    <div id="exam-options" class="runner-options"></div>
+    <input id="exam-text-input" class="text-input runner-text-input hidden" type="text" placeholder="Digite sua resposta...">
+    <button id="btn-exam-next" class="btn btn-primary btn-lg">Próxima</button>
+  </div>
+
+  <div id="exam-result" class="runner-summary hidden">
+    <div class="runner-summary-icon">🏁</div>
+    <h2 class="runner-summary-title">Resultado da prova</h2>
+    <div id="exam-score" class="exam-score">0/10</div>
+    <div id="exam-review" class="exam-review"></div>
+    <button id="btn-exam-finish" class="btn btn-primary btn-lg">Voltar à trilha</button>
+  </div>
+</section>
+
+<!-- ===================== FEYNMAN MODE ===================== -->
+<section id="screen-feynman" class="screen">
+  <header class="runner-top">
+    <button id="btn-exit-feynman" class="icon-btn" aria-label="Sair">✕</button>
+    <div class="section-title" style="margin:0">Ensine o Sistema</div>
+    <div style="width:40px"></div>
+  </header>
+
+  <div id="feynman-picker" class="feynman-picker"></div>
+
+  <div id="feynman-writer" class="feynman-writer hidden">
+    <div id="feynman-prompt" class="runner-intro-text" style="text-align:left"></div>
+    <textarea id="feynman-textarea" class="feynman-textarea" placeholder="Explique aqui com suas próprias palavras, como se estivesse ensinando um amigo..."></textarea>
+    <button id="btn-feynman-submit" class="btn btn-primary btn-lg">Enviar explicação</button>
+  </div>
+
+  <div id="feynman-feedback" class="runner-summary hidden">
+    <div class="runner-summary-icon">🧠</div>
+    <h2 class="runner-summary-title">Boa explicação!</h2>
+    <div id="feynman-feedback-text" class="feynman-feedback-text"></div>
+    <button id="btn-feynman-finish" class="btn btn-primary btn-lg">Voltar à trilha</button>
+  </div>
+</section>
+
+<!-- ===================== PROFILE ===================== -->
+<section id="screen-profile" class="screen">
+  <header class="topbar">
+    <div class="section-title" style="margin:0">Seu perfil</div>
+  </header>
+
+  <div class="profile-card">
+    <div id="profile-avatar" class="profile-avatar">🧑‍🚀</div>
+    <div id="profile-name" class="profile-name">Aventureiro</div>
+    <div id="profile-level" class="player-level">Nível 1</div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-box"><div id="stat-xp" class="stat-num">0</div><div class="stat-label">XP total</div></div>
+    <div class="stat-box"><div id="stat-streak" class="stat-num">0</div><div class="stat-label">Dias seguidos</div></div>
+    <div class="stat-box"><div id="stat-missions" class="stat-num">0</div><div class="stat-label">Missões</div></div>
+  </div>
+
+  <div class="section-title">Conquistas</div>
+  <div id="badge-grid" class="badge-grid"></div>
+
+  <button id="btn-reset" class="btn btn-ghost">Reiniciar progresso</button>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-nav="home">🏠<span>Início</span></button>
+    <button class="nav-btn is-active" data-nav="profile">🎒<span>Perfil</span></button>
+  </nav>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/srs.js"></script>
+<script src="js/sounds.js"></script>
+<script src="js/email-config.js"></script>
+<script src="js/email.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
