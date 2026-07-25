@@ -119,6 +119,95 @@ const QUEST_DATA = {
               ]
             }
           ]
+        },
+        {
+          id: "cme-f5", title: "Fase 5 · SUS e Saúde Pública",
+          missions: [
+            {
+              id: "cme-5-1", title: "Princípios e Estrutura do SUS",
+              explanation: "Ronda 8. Sai um pouco da CME e entra na estrutura do sistema.",
+              exercises: [
+                { id: "cme-5-1-1", type: "mc", q: "Os três princípios doutrinários do SUS são:", options: ["Eficiência, lucro e agilidade", "Universalidade, integralidade e equidade", "Hierarquia, disciplina e controle", "Privatização, terceirização e cogestão"], answer: 1, hint: "São a base filosófica do sistema, não os organizativos." },
+                { id: "cme-5-1-2", type: "mc", q: "A Lei nº 8.080/1990 é conhecida como:", options: ["Lei Orgânica da Saúde", "Lei das Diretrizes Orçamentárias", "Estatuto do Idoso", "Lei da Vigilância Sanitária"], answer: 0, hint: "É a lei que estrutura o funcionamento do SUS." },
+                { id: "cme-5-1-3", type: "truefalse", q: "\"O SUS atende apenas pessoas que não possuem plano de saúde privado.\"", answer: false, explain: "Pela universalidade, o SUS é direito de todos os cidadãos, tenham plano privado ou não." },
+                { id: "cme-5-1-4", type: "mc", q: "A 'integralidade' no SUS significa:", options: ["atender só a doença principal do paciente", "considerar o indivíduo como um todo, com ações de promoção, prevenção e cura", "integrar hospitais públicos e privados num só", "cobrar integralmente pelos serviços"], answer: 1, hint: "Pense em cuidar da pessoa inteira, não só de um sintoma." },
+                { id: "cme-5-1-5", type: "mc", q: "O controle social no SUS é exercido principalmente por meio de:", options: ["câmeras de vigilância nos hospitais", "conselhos e conferências de saúde com participação popular", "auditorias fiscais anuais", "pesquisas de satisfação em aplicativos"], answer: 1, hint: "É sobre a sociedade participar das decisões." },
+              ],
+            },
+            {
+              id: "cme-5-2", title: "Níveis de Atenção e Vigilância",
+              explanation: "Ronda 9. Como o sistema se organiza na prática.",
+              exercises: [
+                { id: "cme-5-2-1", type: "mc", q: "A Atenção Primária à Saúde (APS) tem como principal porta de entrada:", options: ["o pronto-socorro do hospital", "a Unidade Básica de Saúde (UBS)", "a UTI", "o centro cirúrgico"], answer: 1, hint: "É o primeiro contato do cidadão com o sistema, no bairro." },
+                { id: "cme-5-2-2", type: "order", q: "Ordene os níveis de complexidade da atenção à saúde, do menos ao mais complexo:", items: ["Atenção Primária (UBS)", "Atenção Secundária (especialidades)", "Atenção Terciária (alta complexidade)"], explain: "A lógica é encaminhar do mais simples e próximo para o mais complexo e especializado." },
+                { id: "cme-5-2-3", type: "mc", q: "A Vigilância Epidemiológica é responsável por:", options: ["fiscalizar a qualidade de alimentos e medicamentos", "monitorar a ocorrência e distribuição de doenças na população", "cuidar da saúde do trabalhador apenas", "controlar o orçamento do hospital"], answer: 1, hint: "Pense em rastrear surtos e epidemias." },
+                { id: "cme-5-2-4", type: "truefalse", q: "\"A Vigilância Sanitária e a Vigilância Epidemiológica são exatamente a mesma coisa.\"", answer: false, explain: "A Sanitária foca em produtos/serviços/ambientes; a Epidemiológica foca na ocorrência de doenças na população." },
+                { id: "cme-5-2-5", type: "mc", q: "A ANVISA, no âmbito federal, é o órgão responsável por:", options: ["pagar os salários dos profissionais do SUS", "a vigilância sanitária de produtos e serviços de saúde", "construir hospitais", "formar médicos e enfermeiros"], answer: 1, hint: "O nome já entrega: Agência Nacional de Vigilância Sanitária." },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cme-f6", title: "Fase 6 · Gestão em Saúde",
+          missions: [
+            {
+              id: "cme-6-1", title: "Indicadores e Qualidade",
+              explanation: "Ronda 10. Gestão é medir pra melhorar.",
+              exercises: [
+                { id: "cme-6-1-1", type: "mc", q: "A taxa de ocupação hospitalar é calculada pela relação entre:", options: ["número de médicos e número de pacientes", "leitos ocupados e leitos disponíveis, num período", "receita e despesa do hospital", "altas e óbitos"], answer: 1, hint: "É uma razão entre o que está ocupado e o total disponível." },
+                { id: "cme-6-1-2", type: "mc", q: "'Tempo médio de permanência' é um indicador que mede:", options: ["quanto tempo o paciente espera na fila", "a média de dias que os pacientes ficam internados", "o tempo de duração das cirurgias", "a validade dos materiais estéreis"], answer: 1, hint: "Permanência = internação." },
+                { id: "cme-6-1-3", type: "truefalse", q: "\"Uma taxa de infecção hospitalar mais baixa geralmente indica melhor qualidade assistencial.\"", answer: true, explain: "Taxas baixas de IRAS costumam refletir boas práticas de controle de infecção e segurança do paciente." },
+                { id: "cme-6-1-4", type: "mc", q: "O ciclo PDCA, muito usado em gestão da qualidade, significa:", options: ["Planejar, Desenvolver, Cobrar, Auditar", "Plan, Do, Check, Act (Planejar, Fazer, Checar, Agir)", "Produzir, Distribuir, Controlar, Avaliar", "Prevenir, Diagnosticar, Cuidar, Acompanhar"], answer: 1, hint: "É um ciclo de melhoria contínua, de origem inglesa." },
+                { id: "cme-6-1-5", type: "mc", q: "Acreditação hospitalar (ex: ONA) é:", options: ["uma obrigação fiscal do hospital", "um processo voluntário de avaliação da qualidade e segurança dos serviços", "o cadastro do hospital no SUS", "a contratação de funcionários"], answer: 1, hint: "É um selo de qualidade, geralmente voluntário." },
+              ],
+            },
+            {
+              id: "cme-6-2", title: "Segurança do Paciente",
+              explanation: "Ronda 11. O tema que conecta CME, bloco e gestão.",
+              exercises: [
+                { id: "cme-6-2-1", type: "mc", q: "As metas internacionais de segurança do paciente incluem, entre outras:", options: ["aumentar o número de cirurgias por dia", "identificar corretamente o paciente e melhorar a higienização das mãos", "reduzir o número de funcionários", "acelerar as altas hospitalares"], answer: 1, hint: "São metas de segurança, não de produtividade." },
+                { id: "cme-6-2-2", type: "match", q: "Associe cada 'M' das metas de segurança ao seu foco:", pairs: [
+                  { left: "Higienização das mãos", right: "Reduzir infecções" },
+                  { left: "Cirurgia segura (checklist)", right: "Evitar erro de sítio/procedimento" },
+                  { left: "Identificação do paciente", right: "Evitar troca de pessoa" }
+                ], explain: "Cada meta ataca um tipo específico de risco assistencial." },
+                { id: "cme-6-2-3", type: "truefalse", q: "\"A notificação de um 'quase-erro' (near miss) é inútil, pois nenhum dano chegou a ocorrer.\"", answer: false, explain: "Near misses são valiosíssimos: revelam falhas no processo antes que causem dano real." },
+                { id: "cme-6-2-4", type: "mc", q: "Um 'evento adverso' em saúde é definido como:", options: ["qualquer reclamação do paciente", "um dano não intencional decorrente da assistência, não da doença de base", "um atraso na alta hospitalar", "uma cirurgia bem-sucedida"], answer: 1, hint: "A palavra-chave é 'dano decorrente da assistência'." },
+                { id: "cme-6-2-5", type: "mc", q: "A cultura de segurança 'justa' (just culture) propõe que, diante de um erro, o foco inicial seja:", options: ["punir imediatamente o profissional envolvido", "entender as falhas do sistema/processo, sem culpabilização automática", "esconder o ocorrido para proteger a instituição", "demitir o gestor responsável"], answer: 1, hint: "É sobre aprender com o processo, não caçar culpados." },
+              ],
+            },
+          ],
+        },
+        {
+          id: "cme-f7", title: "Fase 7 · Bloco Cirúrgico",
+          missions: [
+            {
+              id: "cme-7-1", title: "Fluxos e Zonas do Centro Cirúrgico",
+              explanation: "Ronda 12. O coração cirúrgico do hospital.",
+              exercises: [
+                { id: "cme-7-1-1", type: "mc", q: "No centro cirúrgico, a divisão clássica em zonas (irrestrita, semirrestrita e restrita) serve para:", options: ["organizar o estacionamento", "controlar a circulação de pessoas e materiais conforme o risco de contaminação", "definir salários por área", "separar cirurgiões de enfermeiros"], answer: 1, hint: "É sobre controle de contaminação por área." },
+                { id: "cme-7-1-2", type: "mc", q: "A sala de cirurgia propriamente dita pertence à zona:", options: ["irrestrita", "semirrestrita", "restrita", "externa"], answer: 2, hint: "É a área de maior controle, onde se exige paramentação completa." },
+                { id: "cme-7-1-3", type: "order", q: "Ordene as etapas do tempo cirúrgico de forma geral:", items: ["Pré-operatório (preparo)", "Trans-operatório (a cirurgia em si)", "Pós-operatório (recuperação)"], explain: "Antes, durante e depois — a lógica temporal da assistência cirúrgica." },
+                { id: "cme-7-1-4", type: "truefalse", q: "\"O checklist de cirurgia segura da OMS deve ser aplicado em três momentos: antes da indução anestésica, antes da incisão e antes do paciente sair da sala.\"", answer: true, explain: "São os três momentos: sign in, time out e sign out." },
+                { id: "cme-7-1-5", type: "mc", q: "A instrumentação cirúrgica é a função de:", options: ["anestesiar o paciente", "organizar e fornecer os instrumentais ao cirurgião durante o ato operatório", "limpar a sala após a cirurgia", "agendar as cirurgias"], answer: 1, hint: "É quem 'passa o bisturi' e controla a mesa de instrumentais." },
+              ],
+            },
+            {
+              id: "cme-7-2", title: "Paramentação e Antissepsia",
+              explanation: "Ronda 13. Barreira estéril na prática.",
+              exercises: [
+                { id: "cme-7-2-1", type: "mc", q: "A degermação cirúrgica das mãos e antebraços tem como objetivo:", options: ["apenas deixar as mãos com cheiro agradável", "reduzir a flora transitória e diminuir a flora residente antes da cirurgia", "substituir o uso de luvas", "esterilizar a pele completamente"], answer: 1, hint: "Pele não se esteriliza — se reduz a carga microbiana." },
+                { id: "cme-7-2-2", type: "match", q: "Associe cada antisséptico ao seu uso/característica comum:", pairs: [
+                  { left: "Clorexidina", right: "Efeito residual prolongado" },
+                  { left: "Álcool 70%", right: "Ação rápida, sem efeito residual" },
+                  { left: "Iodopovidona (PVPI)", right: "Amplo espectro, à base de iodo" }
+                ], explain: "Cada antisséptico tem perfil de ação e permanência diferentes." },
+                { id: "cme-7-2-3", type: "truefalse", q: "\"Depois de paramentado e com luvas estéreis, o profissional pode encostar livremente em qualquer superfície da sala.\"", answer: false, explain: "Só se pode tocar o campo estéril; tocar superfícies não estéreis contamina a paramentação." },
+                { id: "cme-7-2-4", type: "mc", q: "A ordem correta de paramentação cirúrgica estéril, em geral, é:", options: ["luva antes do capote", "degermação → capote estéril → luvas estéreis", "luvas → degermação → capote", "capote comum → luvas comuns"], answer: 1, hint: "Primeiro as mãos limpas, depois o avental, por fim as luvas." },
+                { id: "cme-7-2-5", type: "mc", scenario: "Durante a montagem da mesa cirúrgica, a instrumentadora percebe que a ponta de uma pinça encostou por um instante na borda externa (não estéril) da mesa auxiliar.", q: "Qual a conduta correta?", options: ["Ignorar, pois foi só um instante", "Considerar a pinça contaminada e substituí-la por uma estéril", "Passar álcool na pinça e continuar usando", "Continuar, desde que ninguém tenha visto"], answer: 1, explain: "Barreira estéril é binária: contato com área não estéril = item contaminado, sem meio-termo." },
+              ],
+            },
+          ],
         }
       ]
     }

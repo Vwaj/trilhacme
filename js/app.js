@@ -226,15 +226,10 @@ function renderHome() {
   document.getElementById("review-count").textContent = dueCount;
 }
 
-/* pula a tela inicial pela porta certa: se ainda não fez as curiosidades
-   de hoje, mostra a Trilha de Curiosidades antes de liberar a Home */
+/* vai direto para a Home (as curiosidades diárias foram removidas deste app) */
 function goHome() {
-  if (dailyTriviaDue()) {
-    startDailyTrivia();
-  } else {
-    renderHome();
-    showScreen("screen-home");
-  }
+  renderHome();
+  showScreen("screen-home");
 }
 
 /* ================= RUNNER (missão / revisão) ================= */
@@ -250,6 +245,7 @@ const runner = {
   hearts: 3,
   sessionXP: 0,
   combo: 0,
+  orderState: [],
   currentAnswered: false,
 };
 
@@ -354,22 +350,46 @@ function renderRunnerQuestion() {
   const ex = runner.queue[runner.index];
   runner.currentAnswered = false;
 
+  // avatar neutro a cada nova pergunta
+  setNurseExpression("idle");
+
+  // contexto entre aspas (texto curto de apoio)
   const ctx = document.getElementById("runner-context");
   ctx.textContent = ex.text || "";
   ctx.style.display = ex.text ? "block" : "none";
+
+  // cenário / caso (bloco destacado tipo "situação do dia a dia")
+  const scen = document.getElementById("runner-scenario");
+  if (ex.scenario) {
+    scen.innerHTML = `<span class="scenario-tag">🩺 Situação</span> ${ex.scenario}`;
+    scen.classList.remove("hidden");
+  } else {
+    scen.classList.add("hidden");
+  }
+
   document.getElementById("runner-question").textContent = ex.q;
 
   const optsWrap = document.getElementById("runner-options");
+  const orderWrap = document.getElementById("runner-order");
+  const matchWrap = document.getElementById("runner-match");
   const textInput = document.getElementById("runner-text-input");
   optsWrap.innerHTML = "";
+  orderWrap.innerHTML = "";
+  matchWrap.innerHTML = "";
+  optsWrap.classList.add("hidden");
+  orderWrap.classList.add("hidden");
+  matchWrap.classList.add("hidden");
+  textInput.classList.add("hidden");
+  delete optsWrap.dataset.picked;
+
   document.getElementById("runner-feedback").classList.add("hidden");
   document.getElementById("btn-runner-check").classList.remove("hidden");
   document.getElementById("btn-runner-next").classList.add("hidden");
 
-  if (ex.type === "mc") {
-    textInput.classList.add("hidden");
+  if (ex.type === "mc" || ex.type === "truefalse") {
+    const options = ex.type === "truefalse" ? ["✅ Verdadeiro", "❌ Falso"] : ex.options;
     optsWrap.classList.remove("hidden");
-    ex.options.forEach((opt, i) => {
+    options.forEach((opt, i) => {
       const b = document.createElement("button");
       b.className = "opt-btn";
       b.textContent = opt;
@@ -382,13 +402,87 @@ function renderRunnerQuestion() {
       });
       optsWrap.appendChild(b);
     });
+  } else if (ex.type === "order") {
+    // ordenar etapas: lista com botões ↑ ↓
+    orderWrap.classList.remove("hidden");
+    runner.orderState = shuffleArray(ex.items.map((label, i) => ({ label, origIdx: i })));
+    renderOrderList();
+  } else if (ex.type === "match") {
+    // associação: cada item da esquerda tem um <select> com as opções da direita
+    matchWrap.classList.remove("hidden");
+    const rightOpts = shuffleArray(ex.pairs.map((p, i) => ({ label: p.right, idx: i })));
+    ex.pairs.forEach((pair, i) => {
+      const row = document.createElement("div");
+      row.className = "match-row";
+      const left = document.createElement("div");
+      left.className = "match-left";
+      left.textContent = pair.left;
+      const sel = document.createElement("select");
+      sel.className = "match-select";
+      sel.dataset.leftIdx = i;
+      const blank = document.createElement("option");
+      blank.value = ""; blank.textContent = "— escolha —";
+      sel.appendChild(blank);
+      rightOpts.forEach((r) => {
+        const o = document.createElement("option");
+        o.value = r.idx; o.textContent = r.label;
+        sel.appendChild(o);
+      });
+      row.appendChild(left);
+      row.appendChild(sel);
+      matchWrap.appendChild(row);
+    });
   } else {
-    optsWrap.classList.add("hidden");
+    // text
     textInput.classList.remove("hidden");
     textInput.disabled = false;
     textInput.value = "";
   }
   updateRunnerProgress();
+}
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderOrderList() {
+  const orderWrap = document.getElementById("runner-order");
+  orderWrap.innerHTML = "";
+  runner.orderState.forEach((item, pos) => {
+    const row = document.createElement("div");
+    row.className = "order-row";
+    const num = document.createElement("span");
+    num.className = "order-num";
+    num.textContent = pos + 1;
+    const label = document.createElement("span");
+    label.className = "order-label";
+    label.textContent = item.label;
+    const controls = document.createElement("div");
+    controls.className = "order-controls";
+    const up = document.createElement("button");
+    up.className = "order-btn"; up.textContent = "▲"; up.disabled = pos === 0;
+    up.addEventListener("click", () => { moveOrderItem(pos, -1); });
+    const down = document.createElement("button");
+    down.className = "order-btn"; down.textContent = "▼"; down.disabled = pos === runner.orderState.length - 1;
+    down.addEventListener("click", () => { moveOrderItem(pos, 1); });
+    controls.appendChild(up); controls.appendChild(down);
+    row.appendChild(num); row.appendChild(label); row.appendChild(controls);
+    orderWrap.appendChild(row);
+  });
+}
+
+function moveOrderItem(pos, dir) {
+  const target = pos + dir;
+  if (target < 0 || target >= runner.orderState.length) return;
+  const arr = runner.orderState;
+  [arr[pos], arr[target]] = [arr[target], arr[pos]];
+  vibrate(10);
+  renderOrderList();
 }
 
 function checkTextAnswer(ex, value) {
@@ -402,19 +496,37 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
   const ex = runner.queue[runner.index];
   let correct = false;
 
-  if (ex.type === "mc") {
+  if (ex.type === "mc" || ex.type === "truefalse") {
     const optsWrap = document.getElementById("runner-options");
     const picked = optsWrap.dataset.picked;
     if (picked === undefined) {
       showToast("Escolha uma alternativa primeiro!", "👆");
       return;
     }
-    correct = Number(picked) === ex.answer;
+    const answerIdx = ex.type === "truefalse" ? (ex.answer === true ? 0 : 1) : ex.answer;
+    correct = Number(picked) === answerIdx;
     optsWrap.querySelectorAll(".opt-btn").forEach((o, i) => {
       o.disabled = true;
-      if (i === ex.answer) o.classList.add("is-correct");
+      if (i === answerIdx) o.classList.add("is-correct");
       else if (i === Number(picked) && !correct) o.classList.add("is-wrong");
     });
+  } else if (ex.type === "order") {
+    correct = runner.orderState.every((item, pos) => item.origIdx === pos);
+    document.querySelectorAll("#runner-order .order-btn").forEach((b) => (b.disabled = true));
+  } else if (ex.type === "match") {
+    const selects = document.querySelectorAll("#runner-match .match-select");
+    correct = true;
+    selects.forEach((sel) => {
+      const leftIdx = Number(sel.dataset.leftIdx);
+      if (Number(sel.value) !== leftIdx) correct = false;
+      sel.disabled = true;
+      sel.classList.add(Number(sel.value) === leftIdx ? "match-ok" : "match-bad");
+    });
+    if ([...selects].some((s) => s.value === "")) {
+      selects.forEach((s) => { s.disabled = false; s.classList.remove("match-ok", "match-bad"); });
+      showToast("Complete todas as associações!", "👆");
+      return;
+    }
   } else {
     const val = document.getElementById("runner-text-input").value;
     if (!val.trim()) {
@@ -428,7 +540,7 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
   runner.currentAnswered = true;
   answerExercise(state, ex.id, correct);
 
-  const sparkleOrigin = ex.type === "mc"
+  const sparkleOrigin = (ex.type === "mc" || ex.type === "truefalse")
     ? document.querySelector("#runner-options .opt-btn.is-correct")
     : document.getElementById("btn-runner-check");
 
@@ -437,10 +549,11 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
   if (correct) {
     runner.correct++;
     fb.classList.add("ok");
-    fb.textContent = "✅ Isso aí! Resposta certa.";
+    fb.textContent = ex.explain ? "✅ Isso aí! " + ex.explain : "✅ Isso aí! Resposta certa.";
     vibrate(35);
     sfxCorrect();
     sparkleFromElement(sparkleOrigin);
+    setNurseExpression("happy", 2500);
     runner.combo++;
     updateComboBadge(runner.combo);
     addXP(15);
@@ -452,10 +565,10 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
     runner.hearts = Math.max(0, runner.hearts - 1);
     document.getElementById("runner-hearts").textContent = "❤️".repeat(runner.hearts) || "💔";
     fb.classList.add("bad");
-    const correctText = ex.type === "mc" ? ex.options[ex.answer] : ex.answer;
-    fb.textContent = `❌ Quase! A resposta certa é: ${correctText}. ${ex.hint ? "💡 " + ex.hint : ""}`;
+    fb.textContent = `❌ ${answerReveal(ex)} ${ex.explain ? "— " + ex.explain : (ex.hint ? "💡 " + ex.hint : "")}`;
     vibrate([30, 60, 30]);
     sfxWrong();
+    setNurseExpression("sad", 2500);
     addXP(3);
     runner.sessionXP += 3;
   }
@@ -464,6 +577,15 @@ document.getElementById("btn-runner-check").addEventListener("click", () => {
   document.getElementById("btn-runner-check").classList.add("hidden");
   document.getElementById("btn-runner-next").classList.remove("hidden");
 });
+
+/* texto de "resposta certa" para o feedback de erro, conforme o tipo */
+function answerReveal(ex) {
+  if (ex.type === "mc") return "A resposta certa é: " + ex.options[ex.answer] + ".";
+  if (ex.type === "truefalse") return "A resposta certa é: " + (ex.answer ? "Verdadeiro" : "Falso") + ".";
+  if (ex.type === "order") return "A ordem correta era: " + ex.items.join(" → ") + ".";
+  if (ex.type === "match") return "Confira as associações corretas destacadas.";
+  return "A resposta certa é: " + ex.answer + ".";
+}
 
 document.getElementById("btn-runner-next").addEventListener("click", () => {
   runner.index++;
@@ -571,7 +693,7 @@ document.getElementById("btn-exam").addEventListener("click", () => {
 });
 
 document.getElementById("btn-exam-begin").addEventListener("click", () => {
-  const all = collectAllExercises();
+  const all = collectAllExercises().filter((e) => e.type === "mc" || e.type === "truefalse" || e.type === "text");
   for (let i = all.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [all[i], all[j]] = [all[j], all[i]];
@@ -611,10 +733,11 @@ function renderExamQuestion() {
   optsWrap.innerHTML = "";
   delete optsWrap.dataset.picked;
 
-  if (ex.type === "mc") {
+  if (ex.type === "mc" || ex.type === "truefalse") {
+    const options = ex.type === "truefalse" ? ["✅ Verdadeiro", "❌ Falso"] : ex.options;
     textInput.classList.add("hidden");
     optsWrap.classList.remove("hidden");
-    ex.options.forEach((opt, i) => {
+    options.forEach((opt, i) => {
       const b = document.createElement("button");
       b.className = "opt-btn";
       b.textContent = opt;
@@ -637,7 +760,7 @@ function renderExamQuestion() {
 document.getElementById("btn-exam-next").addEventListener("click", () => {
   const ex = exam.queue[exam.index];
   let userAnswer = null;
-  if (ex.type === "mc") {
+  if (ex.type === "mc" || ex.type === "truefalse") {
     const picked = document.getElementById("exam-options").dataset.picked;
     userAnswer = picked !== undefined ? Number(picked) : null;
   } else {
@@ -668,6 +791,12 @@ function finalizeExam() {
       isCorrect = userAns === ex.answer;
       userLabel = userAns === null ? "(não respondida)" : ex.options[userAns];
       correctLabel = ex.options[ex.answer];
+    } else if (ex.type === "truefalse") {
+      const answerIdx = ex.answer ? 0 : 1;
+      const labels = ["Verdadeiro", "Falso"];
+      isCorrect = userAns === answerIdx;
+      userLabel = userAns === null ? "(não respondida)" : labels[userAns];
+      correctLabel = labels[answerIdx];
     } else {
       isCorrect = userAns !== null && checkTextAnswer(ex, userAns);
       userLabel = userAns || "(não respondida)";

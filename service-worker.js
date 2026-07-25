@@ -2,7 +2,7 @@
    service-worker.js — Cache do "app shell" para uso offline
    ============================================================ */
 
-const CACHE_NAME = "trilha-cme-v4";
+const CACHE_NAME = "trilha-cme-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -12,6 +12,7 @@ const APP_SHELL = [
   "./js/srs.js",
   "./js/sounds.js",
   "./js/effects.js",
+  "./js/avatar.js",
   "./js/email-config.js",
   "./js/email.js",
   "./js/app.js",
